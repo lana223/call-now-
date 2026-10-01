@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choose your time → Confirmation</title>
+<style>
+:root{--bg:#faf9f4;--fg:#23352d;--card:#fffefa;--muted:#68746d;--border:#dfe3dc;--primary:#824bd2;--green:#dfeee5;--cream:#f2c276;--deep:#243b31}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,sans-serif;min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(720px,100%);background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;box-shadow:0 25px 70px rgba(30,55,45,.12)}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:700;color:var(--primary);margin:0 0 12px}.close{border:0;background:transparent;font-size:27px;color:var(--muted);cursor:pointer}.sub{color:var(--muted);margin:10px 0 0;line-height:1.6}.calendar{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}.box{border:1px solid var(--border);border-radius:10px;padding:18px}.days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}.day{border:1px solid var(--border);background:white;border-radius:7px;padding:9px 5px;cursor:pointer;text-align:center}.day small,.day strong{display:block}.day small{font-size:11px;color:var(--muted)}.day.active{background:var(--green);border-color:#9ab8a4}.times{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.time{border:1px solid var(--border);background:white;padding:12px;border-radius:7px;cursor:pointer}.time:disabled{cursor:not-allowed;opacity:.45}.time.active{background:var(--deep);color:white;border-color:var(--deep)}.confirm{width:100%;margin-top:20px;border:0;border-radius:8px;padding:14px;background:var(--primary);color:white;font-weight:700;cursor:pointer}.confirm:disabled{opacity:.45;cursor:not-allowed}.success{text-align:center;padding:24px 8px}.check{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;background:var(--green);color:var(--deep);font-size:30px;font-weight:700}.success h1{font-size:40px;margin:0 0 12px}.notice{max-width:450px;margin:25px auto;padding:16px;text-align:left;background:#f6ead0;border:1px solid #ecd49e;border-radius:8px}.notice ul{margin:10px 0 0;padding-left:20px;color:var(--muted)}.done{border:0;border-radius:8px;padding:13px 24px;background:var(--primary);color:white;font-weight:700;cursor:pointer}@media(max-width:650px){.card{padding:22px}.calendar{grid-template-columns:1fr}.days{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<main class="card" id="app"></main>
+<script>
+const app=document.getElementById('app');let selectedDate='',selectedTime='';
+const times=['9:30 AM','11:00 AM','2:00 PM','4:30 PM'];
+function renderCalendar(){const today=new Date();let days='';for(let i=1;i<=20;i++){const d=new Date(today);d.setDate(today.getDate()+i);if(d.getDay()===0||d.getDay()===6)continue;const value=d.toDateString();days+=`<button class="day ${selectedDate===value?'active':''}" onclick="pickDate('${value}')"><small>${d.toLocaleDateString(undefined,{weekday:'short'})}</small><strong>${d.getDate()}</strong></button>`}app.innerHTML=`<div class="head"><div><p class="eyebrow">Choose your time</p><h1>When should we talk?</h1><p class="sub">Select a date, then choose an available time. Times are shown in your local time.</p></div><button class="close" aria-label="Close">×</button></div><div class="calendar"><section class="box"><b>1. Choose a date</b><div class="days">${days}</div></section><section><b>2. Choose a time</b><p class="sub" style="font-size:13px;margin-top:6px">${selectedDate?'Available times for '+selectedDate:'Choose a date first'}</p><div class="times">${times.map(t=>`<button class="time ${selectedTime===t?'active':''}" ${selectedDate?'':'disabled'} onclick="pickTime('${t}')">${t}</button>`).join('')}</div><button class="confirm" ${selectedDate&&selectedTime?'':'disabled'} onclick="renderConfirmation()">Confirm booking →</button></section></div>`}
+function pickDate(date){selectedDate=date;selectedTime='';renderCalendar()}
+function pickTime(time){selectedTime=time;renderCalendar()}
+function renderConfirmation(){app.innerHTML=`<div class="success"><div class="check">✓</div><p class="eyebrow">Confirmation</p><h1>You're booked.</h1><p class="sub">Your strategy call is confirmed for<br><b>${selectedDate}</b> at <b>${selectedTime}</b><br>with Raouf or Michael</p><div class="notice"><b>Before the call</b><ul><li>Your current number of units</li><li>What you want to achieve</li><li>The biggest blocker in your operation</li></ul></div><button class="done" onclick="renderCalendar()">Done</button></div>`}
+renderCalendar();
+</script>
+</body>
+</html>
